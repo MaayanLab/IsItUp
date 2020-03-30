@@ -1,0 +1,1 @@
+from IsItUp import app as application
