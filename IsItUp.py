@@ -4,12 +4,12 @@ import requests
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/isitup")
 def index():
     return "Find out the status of a website"
 
+@app.route("/isitup/api", methods=['GET', 'POST'])
 @cross_origin()
-@app.route("/api", methods=['GET', 'POST'])
 def api():
     url = None
     if request.method == "GET":
@@ -17,15 +17,24 @@ def api():
     else:
         url = request.form.get('url')
     if url:
-        res = requests.get(url)
-        if res.ok:
+        try:
+            res = requests.get(url)
+            if res.ok:
+                return jsonify({
+                    "status": "yes"
+                })
+            elif res.status_code < 400:
+                return jsonify({
+                    "status": "redirect"
+                })
+            else:
+                return jsonify({
+                    "status": res.status_code
+                })
+        except Exception as e:
             return jsonify({
-                "status": "true"
-            })
-        else:
-            return jsonify({
-                "status": "false"
-            })
+                "status": "No"
+            }) 
     else:
         return jsonify({
             "status": "No url was passed"
