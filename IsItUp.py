@@ -18,7 +18,7 @@ def api():
         url = request.form.get('url')
     if url:
         try:
-            res = requests.get(url)
+            res = requests.get(url, timeout=30)
             if res.ok:
                 return jsonify({
                     "status": "yes"
@@ -33,7 +33,7 @@ def api():
                 })
         except Exception as e:
             return jsonify({
-                "status": "No"
+                "status": str(e)
             }) 
     else:
         return jsonify({
