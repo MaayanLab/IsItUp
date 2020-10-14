@@ -16,9 +16,11 @@ def api():
         url = request.args.get("url")
     else:
         url = request.form.get('url')
+    print(url)
     if url:
         try:
-            res = requests.get(url, timeout=30)
+            res = requests.head(url, timeout=5)
+            status_code = res.status_code
             if res.ok:
                 return jsonify({
                     "status": "yes"
@@ -28,8 +30,10 @@ def api():
                     "status": "redirect"
                 })
             else:
+                n = requests.status_codes._codes[status_code][0].replace("_", " ")
+                status = "%d: %s"%(status_code, n)
                 return jsonify({
-                    "status": res.status_code
+                    "status": status
                 })
         except Exception as e:
             return jsonify({
