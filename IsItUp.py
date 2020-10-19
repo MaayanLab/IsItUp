@@ -37,7 +37,7 @@ def api():
                 })
         except Exception as e:
             return jsonify({
-                "status": str(e)
+                "status": "Error"
             }) 
     else:
         return jsonify({
